@@ -108,4 +108,3 @@ sudo hping3 -S -p 80 --flood 127.0.0.1
 ***Nihat Bayram***
 
 **Version: 4.0 (Stable)**
->>>>>>> a089dcb8914dfd96c18cfacfcd4953cc5c995d67
