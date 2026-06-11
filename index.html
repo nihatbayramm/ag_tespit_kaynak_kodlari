@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FFT-Guard | Yeni Nesil Ağ Güvenlik İstihbaratı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --accent-blue: #00d4ff;
+            --accent-green: #39ff14;
+            --accent-red: #ff3131;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Background Animation */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, #001f3f 0%, transparent 70%);
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            padding: 2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: -1px;
+            color: var(--accent-blue);
+        }
+
+        .logo span {
+            color: var(--text-main);
+        }
+
+        nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-blue);
+        }
+
+        .hero {
+            padding: 12rem 5% 6rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .badge {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-blue);
+            padding: 0.5rem 1.5rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            display: inline-block;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+            background: linear-gradient(to bottom, #fff 40%, #777);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 4rem auto;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border);
+            position: relative;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features {
+            padding: 6rem 5%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            padding: 3rem;
+            border-radius: 24px;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-blue);
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .feature-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        .gallery {
+            padding: 6rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .img-box {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .img-box:hover img {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            padding: 4rem 5%;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            background: var(--text-main);
+            color: var(--bg);
+            padding: 1rem 2.5rem;
+            border-radius: 100px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-glow"></div>
+
+    <header>
+        <div class="logo">FFT<span>GUARD</span></div>
+        <nav>
+            <a href="#video">Demo</a>
+            <a href="#features">Özellikler</a>
+            <a href="#gallery">Analizler</a>
+            <a href="Hafta13_Ilerleme_Raporu.pdf" target="_blank">Raporu İndir</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="badge">Akademik Proje | 14. Hafta</div>
+        <h1>Sinyal İşleme ile Ağ Anomalilerini Tespit Edin</h1>
+        <p>FFT (Hızlı Fourier Dönüşümü) ve Spektral Entropi kullanarak ağ trafiğindeki gizli ritimleri analiz eden, gerçek zamanlı siber güvenlik komuta merkezi.</p>
+        <a href="#video" class="btn">Demo İzle</a>
+    </section>
+
+    <section id="video" class="video-container">
+        <video controls poster="tarama.png">
+            <source src="a76e7053-bd89-4fce-b917-70fbd18c090d.webm" type="video/webm">
+            Tarayıcınız video etiketini desteklemiyor.
+        </video>
+    </section>
+
+    <section id="features" class="section-title">
+        <h2>Teknolojik Üstünlük</h2>
+        <p>Klasik sistemlerin aksine, sinyallerin frekans imzasını okuyarak saniyeler içinde tehdit teşhisi koyuyoruz.</p>
+    </section>
+
+    <div class="features">
+        <div class="feature-card">
+            <span class="icon">⚡</span>
+            <h3>Gerçek Zamanlı Analiz</h3>
+            <p>Saniyede 50.000 pakete kadar trafik yoğunluğunu milisaniyeler içinde işleyebilen FFT motoru.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🌀</span>
+            <h3>Spektral Entropi</h3>
+            <p>Ağ paketlerinin rastgeleliğini ölçerek port taraması ve DDoS gibi ritmik anomalileri hatasız tespit edin.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🛡️</span>
+            <h3>Önerilen Aksiyonlar</h3>
+            <p>Sadece tespit etmez, tehdit türüne göre uygulanması gereken güvenlik protokollerini anında önerir.</p>
+        </div>
+    </div>
+
+    <section id="gallery" class="section-title">
+        <h2>Sistem Analitikleri</h2>
+        <p>Dashboard üzerinden alınan gerçek veriler ve analiz çıktıları.</p>
+    </section>
+
+    <div class="gallery">
+        <div class="grid">
+            <div class="img-box">
+                <img src="sonucarayuz.png" alt="Analiz Sonucu">
+            </div>
+            <div class="img-box">
+                <img src="tarama.png" alt="Radar Tarama">
+            </div>
+            <div class="img-box">
+                <img src="başlangıcarayuzu.png" alt="Başlangıç Ekranı">
+            </div>
+            <div class="img-box">
+                <img src="FFTÇIKTI.png" alt="FFT Çıktısı">
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2026 Nihat Bayram | Sayısal Sinyal İşleme Projesi</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: #555;">Bu proje eğitim amaçlı geliştirilmiştir.</p>
+    </div>
+
+</body>
+</html>
