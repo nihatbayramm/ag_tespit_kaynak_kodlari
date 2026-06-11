@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-# FFT--Ag-Anomali-Tespit-Sistemi-Kaynak-Kodlari
-# FFT--Ag-Anomali-Tespit-Sistemi-Kaynak-Kodlari
-# FFT--Ag-Anomali-Tespit-Sistemi-Kaynak-Kodlari
-=======
-# 🛡️ FFT Anomaly Detection System - v4.0
+# 🛡️ FFT Anomaly Detection System - v17.0
 
 FFT is an advanced cybersecurity analysis tool that detects suspicious activity and DDoS attacks in network traffic using the **Fast Fourier Transform (FFT)**.
 
